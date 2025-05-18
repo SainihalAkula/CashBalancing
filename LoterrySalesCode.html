@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lottery Non-scratch Sales Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+    }
+    .container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      padding: 2rem;
+      max-width: 480px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      font-size: 1.75rem;
+      color: #4a148c;
+    }
+    .file-input-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    input[type="file"] {
+      padding: 0.5rem;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+    input[type="file"]:hover {
+      border-color: #764ba2;
+    }
+    #preview {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: contain;
+      border: 1px solid #eee;
+      max-height: 200px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background-color: #4a148c;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 0.5rem;
+    }
+    .btn:hover {
+      background-color: #6a1b9a;
+    }
+    #results {
+      margin-top: 2rem;
+      display: grid;
+      gap: 0.75rem;
+    }
+    .result-card {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+    }
+    #rawText {
+      margin-top: 1rem;
+      background: #fafafa;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lottery Sales Calculator</h1>
+    <div class="file-input-wrapper">
+      <label>Select or snap a receipt image:</label>
+      <input type="file" id="fileInput" accept="image/*" capture="environment" />
+      <img id="preview" alt="Receipt preview" />
+      <button id="processBtn" class="btn">Calculate</button>
+    </div>
+    <div id="results">
+      <div class="result-card">
+        <span>Subtotal:</span><span id="subtotal">-</span>
+      </div>
+      <div class="result-card">
+        <span>Scratch Sales:</span><span id="scratchSum">-</span>
+      </div>
+      <div class="result-card">
+        <span>Non-scratch Sales:</span><span id="nonscratchSum">-</span>
+      </div>
+      <pre id="rawText"></pre>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const processBtn = document.getElementById('processBtn');
+    const subtotalEl = document.getElementById('subtotal');
+    const scratchEl = document.getElementById('scratchSum');
+    const nonscratchEl = document.getElementById('nonscratchSum');
+    const rawTextEl = document.getElementById('rawText');
+
+    let imgDataUrl = null;
+
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        imgDataUrl = reader.result;
+        preview.src = imgDataUrl;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    processBtn.addEventListener('click', async () => {
+      if (!imgDataUrl) return alert('Please select an image first');
+      subtotalEl.textContent = scratchEl.textContent = nonscratchEl.textContent = '...';
+
+      const { data: { text } } = await Tesseract.recognize(imgDataUrl, 'eng', { logger: m => console.log(m) });
+      rawTextEl.textContent = text;
+
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+      let subtotal = 0, scratchSum = 0;
+      const subtotalRegex = /SUBTOTAL\s+\$?([0-9]+(?:\.[0-9]{1,2})?)/i;
+      const scratchRegex = /^\d+\s+.*?\$?([0-9]+(?:\.[0-9]{1,2})?)$/;
+
+      for (const l of lines) {
+        const m1 = subtotalRegex.exec(l);
+        if (m1) subtotal = parseFloat(m1[1]);
+        const m2 = scratchRegex.exec(l);
+        if (m2 && !/SUBTOTAL/i.test(l)) scratchSum += parseFloat(m2[1]);
+      }
+
+      const nonScratch = subtotal ? (subtotal - scratchSum) : 0;
+      subtotalEl.textContent = subtotal.toFixed(2);
+      scratchEl.textContent = scratchSum.toFixed(2);
+      nonscratchEl.textContent = nonScratch.toFixed(2);
+    });
+  </script>
+</body>
+</html>
