@@ -1,172 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lottery Non-scratch Sales Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      font-family: 'Roboto', sans-serif;
-      color: #333;
-    }
-    .container {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-      padding: 2rem;
-      max-width: 480px;
-      width: 100%;
-    }
-    h1 {
-      text-align: center;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      font-size: 1.75rem;
-      color: #4a148c;
-    }
-    .file-input-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-    input[type="file"] {
-      padding: 0.5rem;
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: border-color 0.3s;
-    }
-    input[type="file"]:hover {
-      border-color: #764ba2;
-    }
-    #preview {
-      width: 100%;
-      border-radius: 8px;
-      object-fit: contain;
-      border: 1px solid #eee;
-      max-height: 200px;
-    }
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #fff;
-      background-color: #4a148c;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 0.5rem;
-    }
-    .btn:hover {
-      background-color: #6a1b9a;
-    }
-    #results {
-      margin-top: 2rem;
-      display: grid;
-      gap: 0.75rem;
-    }
-    .result-card {
-      background: #f9f9f9;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      font-weight: 500;
-    }
-    #rawText {
-      margin-top: 1rem;
-      background: #fafafa;
-      padding: 0.75rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      max-height: 150px;
-      overflow-y: auto;
-      font-family: monospace;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cash Tray Break Down</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            -webkit-text-size-adjust: 100%;
+        }
+        .cash-tray {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        label {
+            width: 30%;
+            font-weight: bold;
+            font-size: 1rem;
+            min-width: 100px;
+        }
+        input {
+            width: 20%;
+            min-width: 80px;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            text-align: right;
+            font-size: 1rem;
+            height: 40px;
+        }
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .result {
+            width: 40%;
+            min-width: 100px;
+            display: inline-block;
+            text-align: right;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+            border-top: 2px solid #333;
+            padding-top: 10px;
+        }
+        #date {
+            width: 60%;
+            min-width: 150px;
+            margin-bottom: 20px;
+            height: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 400px) {
+            label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            input {
+                width: 30%;
+                margin-right: 5%;
+            }
+            .result {
+                width: 60%;
+                text-align: right;
+            }
+            #date {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Lottery Sales Calculator</h1>
-    <div class="file-input-wrapper">
-      <label>Select or snap a receipt image:</label>
-      <input type="file" id="fileInput" accept="image/*" capture="environment" />
-      <img id="preview" alt="Receipt preview" />
-      <button id="processBtn" class="btn">Calculate</button>
+    <div class="cash-tray">
+        <div class="header">
+            <h1>Cash Tray Break Down</h1>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="twenty">X $20 =</label>
+            <input type="number" id="twenty" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="twentyResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="ten">X $10 =</label>
+            <input type="number" id="ten" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="tenResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="five">X $5 =</label>
+            <input type="number" id="five" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="fiveResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="two">X $2 =</label>
+            <input type="number" id="two" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="twoResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="one">X $1 =</label>
+            <input type="number" id="one" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="oneResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="quarter">X $0.25 =</label>
+            <input type="number" id="quarter" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="quarterResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="dime">X $0.10 =</label>
+            <input type="number" id="dime" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="dimeResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="nickel">X $0.05 =</label>
+            <input type="number" id="nickel" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="nickelResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="coinRolls">Coin rolls =</label>
+            <input type="number" id="coinRolls" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <span id="coinRollsResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group total">
+            <label>Total Float =</label>
+            <span id="totalFloat" class="result">$0.00</span>
+        </div>
     </div>
-    <div id="results">
-      <div class="result-card">
-        <span>Subtotal:</span><span id="subtotal">-</span>
-      </div>
-      <div class="result-card">
-        <span>Scratch Sales:</span><span id="scratchSum">-</span>
-      </div>
-      <div class="result-card">
-        <span>Non-scratch Sales:</span><span id="nonscratchSum">-</span>
-      </div>
-      <pre id="rawText"></pre>
-    </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
-  <script>
-    const fileInput = document.getElementById('fileInput');
-    const preview = document.getElementById('preview');
-    const processBtn = document.getElementById('processBtn');
-    const subtotalEl = document.getElementById('subtotal');
-    const scratchEl = document.getElementById('scratchSum');
-    const nonscratchEl = document.getElementById('nonscratchSum');
-    const rawTextEl = document.getElementById('rawText');
-
-    let imgDataUrl = null;
-
-    fileInput.addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        imgDataUrl = reader.result;
-        preview.src = imgDataUrl;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    processBtn.addEventListener('click', async () => {
-      if (!imgDataUrl) return alert('Please select an image first');
-      subtotalEl.textContent = scratchEl.textContent = nonscratchEl.textContent = '...';
-
-      const { data: { text } } = await Tesseract.recognize(imgDataUrl, 'eng', { logger: m => console.log(m) });
-      rawTextEl.textContent = text;
-
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-      let subtotal = 0, scratchSum = 0;
-      const subtotalRegex = /SUBTOTAL\s+\$?([0-9]+(?:\.[0-9]{1,2})?)/i;
-      const scratchRegex = /^\d+\s+.*?\$?([0-9]+(?:\.[0-9]{1,2})?)$/;
-
-      for (const l of lines) {
-        const m1 = subtotalRegex.exec(l);
-        if (m1) subtotal = parseFloat(m1[1]);
-        const m2 = scratchRegex.exec(l);
-        if (m2 && !/SUBTOTAL/i.test(l)) scratchSum += parseFloat(m2[1]);
-      }
-
-      const nonScratch = subtotal ? (subtotal - scratchSum) : 0;
-      subtotalEl.textContent = subtotal.toFixed(2);
-      scratchEl.textContent = scratchSum.toFixed(2);
-      nonscratchEl.textContent = nonScratch.toFixed(2);
-    });
-  </script>
+    <script>
+        function calculate() {
+            // Get quantities
+            const twenty = parseFloat(document.getElementById('twenty').value) || 0;
+            const ten = parseFloat(document.getElementById('ten').value) || 0;
+            const five = parseFloat(document.getElementById('five').value) || 0;
+            const two = parseFloat(document.getElementById('two').value) || 0;
+            const one = parseFloat(document.getElementById('one').value) || 0;
+            const quarter = parseFloat(document.getElementById('quarter').value) || 0;
+            const dime = parseFloat(document.getElementById('dime').value) || 0;
+            const nickel = parseFloat(document.getElementById('nickel').value) || 0;
+            const coinRolls = parseFloat(document.getElementById('coinRolls').value) || 0;
+            
+            // Calculate amounts
+            const twentyAmount = twenty * 20;
+            const tenAmount = ten * 10;
+            const fiveAmount = five * 5;
+            const twoAmount = two * 2;
+            const oneAmount = one * 1;
+            const quarterAmount = quarter * 0.25;
+            const dimeAmount = dime * 0.10;
+            const nickelAmount = nickel * 0.05;
+            
+            // Coin rolls are not multiplied - displayed as entered
+            const coinRollsAmount = coinRolls;
+            
+            // Update display
+            document.getElementById('twentyResult').textContent = '$' + twentyAmount.toFixed(2);
+            document.getElementById('tenResult').textContent = '$' + tenAmount.toFixed(2);
+            document.getElementById('fiveResult').textContent = '$' + fiveAmount.toFixed(2);
+            document.getElementById('twoResult').textContent = '$' + twoAmount.toFixed(2);
+            document.getElementById('oneResult').textContent = '$' + oneAmount.toFixed(2);
+            document.getElementById('quarterResult').textContent = '$' + quarterAmount.toFixed(2);
+            document.getElementById('dimeResult').textContent = '$' + dimeAmount.toFixed(2);
+            document.getElementById('nickelResult').textContent = '$' + nickelAmount.toFixed(2);
+            document.getElementById('coinRollsResult').textContent = '$' + coinRollsAmount.toFixed(2);
+            
+            // Calculate total
+            const total = twentyAmount + tenAmount + fiveAmount + twoAmount + oneAmount + 
+                          quarterAmount + dimeAmount + nickelAmount + coinRollsAmount;
+            
+            document.getElementById('totalFloat').textContent = '$' + total.toFixed(2);
+        }
+        
+        // Set today's date as default
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            document.getElementById('date').value = dateString;
+            
+            // Focus first input field on load for easier mobile entry
+            document.getElementById('twenty').focus();
+        });
+    </script>
 </body>
 </html>
