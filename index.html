@@ -70,10 +70,12 @@
         }
         .total {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1rem;
             margin-top: 20px;
             border-top: 2px solid #333;
             padding-top: 10px;
+            display: flex;
+            align-items: center;
         }
         #date {
             width: 60%;
@@ -117,55 +119,55 @@
         
         <div class="form-group">
             <label for="twenty">X $20 =</label>
-            <input type="number" id="twenty" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="twenty" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="twentyResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="ten">X $10 =</label>
-            <input type="number" id="ten" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="ten" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="tenResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="five">X $5 =</label>
-            <input type="number" id="five" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="five" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="fiveResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="two">X $2 =</label>
-            <input type="number" id="two" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="two" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="twoResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="one">X $1 =</label>
-            <input type="number" id="one" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="one" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="oneResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="quarter">X $0.25 =</label>
-            <input type="number" id="quarter" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="quarter" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="quarterResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="dime">X $0.10 =</label>
-            <input type="number" id="dime" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="dime" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="dimeResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="nickel">X $0.05 =</label>
-            <input type="number" id="nickel" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="nickel" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="nickelResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="coinRolls">Coin rolls =</label>
-            <input type="number" id="coinRolls" min="0" value="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="coinRolls" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="coinRollsResult" class="result">$0.00</span>
         </div>
         
@@ -224,6 +226,22 @@
             const today = new Date();
             const dateString = today.toISOString().split('T')[0];
             document.getElementById('date').value = dateString;
+            
+            // Add event listeners to clear default zero on focus
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    if (this.value === "0") {
+                        this.value = '';
+                    }
+                });
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.value = '0';
+                        calculate();
+                    }
+                });
+            });
             
             // Focus first input field on load for easier mobile entry
             document.getElementById('twenty').focus();
