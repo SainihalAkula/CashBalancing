@@ -1,437 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-		/>
-		<title>Cash Tray Break Down</title>
-		<style>
-			* {
-				box-sizing: border-box;
-			}
-			body {
-				font-family: 'Segoe UI', Arial, sans-serif;
-				max-width: 100%;
-				margin: 0;
-				padding: 20px;
-				background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-				min-height: 100vh;
-				-webkit-text-size-adjust: 100%;
-			}
-			.cash-tray {
-				background-color: white;
-				border: 1px solid #d1d5db;
-				border-radius: 10px;
-				padding: 20px;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-				max-width: 500px;
-				margin: 0 auto;
-				backdrop-filter: blur(5px);
-			}
-			h1 {
-				text-align: center;
-				color: #2d3748;
-				margin-top: 0;
-				font-size: 1.8rem;
-				font-weight: 600;
-				margin-bottom: 5px;
-			}
-			.form-group {
-				margin-bottom: 15px;
-				display: flex;
-				align-items: center;
-				padding-bottom: 12px;
-				border-bottom: 1px solid #edf2f7;
-				flex-wrap: wrap;
-			}
-			label {
-				width: 30%;
-				font-weight: 600;
-				font-size: 1rem;
-				min-width: 100px;
-				color: #4a5568;
-			}
-			input {
-				width: 20%;
-				min-width: 80px;
-				padding: 10px 12px;
-				margin-right: 10px;
-				border: 1px solid #e2e8f0;
-				border-radius: 6px;
-				text-align: right;
-				font-size: 1rem;
-				height: 42px;
-				background-color: #f8fafc;
-				transition: all 0.2s ease;
-			}
-			input:focus {
-				border-color: #4299e1;
-				outline: none;
-				box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-				background-color: white;
-			}
-			.result {
-				width: 40%;
-				min-width: 100px;
-				display: inline-block;
-				text-align: right;
-				font-weight: 600;
-				font-size: 1rem;
-				color: #2d3748;
-			}
-			.total {
-				font-weight: 600;
-				font-size: 1.1rem;
-				margin-top: 25px;
-				border-top: 2px solid #e2e8f0;
-				padding-top: 12px;
-				display: flex;
-				align-items: center;
-			}
-			#date {
-				width: 60%;
-				min-width: 150px;
-				margin-bottom: 20px;
-				height: 42px;
-				background-color: #f8fafc;
-			}
-			.header {
-				text-align: center;
-				margin-bottom: 20px;
-			}
-			.arrow {
-				color: #718096;
-				margin: 0 8px;
-				font-size: 1.1rem;
-			}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cash Tray Break Down</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 100%;
+            margin: 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            -webkit-text-size-adjust: 100%;
+        }
+        .cash-tray {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        label {
+            width: 30%;
+            font-weight: bold;
+            font-size: 1rem;
+            min-width: 100px;
+        }
+        input {
+            width: 20%;
+            min-width: 80px;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            text-align: right;
+            font-size: 1rem;
+            height: 40px;
+        }
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .result {
+            width: 40%;
+            min-width: 100px;
+            display: inline-block;
+            text-align: right;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 20px;
+            border-top: 2px solid #333;
+            padding-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        #date {
+            width: 60%;
+            min-width: 150px;
+            margin-bottom: 20px;
+            height: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 400px) {
+            label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            input {
+                width: 30%;
+                margin-right: 5%;
+            }
+            .result {
+                width: 60%;
+                text-align: right;
+            }
+            #date {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cash-tray">
+        <div class="header">
+            <h1>Cash Tray Break Down</h1>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="twenty">X $20 =</label>
+            <input type="number" id="twenty" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="twentyResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="ten">X $10 =</label>
+            <input type="number" id="ten" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="tenResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="five">X $5 =</label>
+            <input type="number" id="five" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="fiveResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="two">X $2 =</label>
+            <input type="number" id="two" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="twoResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="one">X $1 =</label>
+            <input type="number" id="one" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="oneResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="quarter">X $0.25 =</label>
+            <input type="number" id="quarter" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="quarterResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="dime">X $0.10 =</label>
+            <input type="number" id="dime" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="dimeResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="nickel">X $0.05 =</label>
+            <input type="number" id="nickel" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="nickelResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="coinRolls">Coin rolls =</label>
+            <input type="number" id="coinRolls" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="coinRollsResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group total">
+            <label>Total Float =</label>
+            <span id="totalFloat" class="result">$0.00</span>
+        </div>
+    </div>
 
-			/* Clear Button Styles */
-			.clear-btn-container {
-				display: flex;
-				justify-content: center;
-				margin-top: 20px;
-			}
-			.clear-btn {
-				background-color: #f56565;
-				color: white;
-				border: none;
-				padding: 12px 24px;
-				border-radius: 6px;
-				font-size: 1rem;
-				font-weight: 600;
-				cursor: pointer;
-				transition: all 0.2s ease;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			}
-			.clear-btn:hover {
-				background-color: #e53e3e;
-				transform: translateY(-1px);
-				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			}
-			.clear-btn:active {
-				transform: translateY(0);
-				box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-			}
-
-			@media (max-width: 400px) {
-				body {
-					padding: 15px 10px;
-				}
-				.cash-tray {
-					padding: 15px;
-				}
-				label {
-					width: 100%;
-					margin-bottom: 8px;
-				}
-				input {
-					width: 30%;
-					margin-right: 5%;
-				}
-				.result {
-					width: 60%;
-					text-align: right;
-				}
-				#date {
-					width: 100%;
-				}
-				.clear-btn {
-					width: 100%;
-					padding: 14px;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<div class="cash-tray">
-			<div class="header">
-				<h1>Cash Tray Break Down</h1>
-				<div class="form-group">
-					<label for="date">Date:</label>
-					<input type="date" id="date" />
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="twenty">X $20 =</label>
-				<input
-					type="number"
-					id="twenty"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="twentyResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="ten">X $10 =</label>
-				<input
-					type="number"
-					id="ten"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="tenResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="five">X $5 =</label>
-				<input
-					type="number"
-					id="five"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="fiveResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="two">X $2 =</label>
-				<input
-					type="number"
-					id="two"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="twoResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="one">X $1 =</label>
-				<input
-					type="number"
-					id="one"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="oneResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="quarter">X $0.25 =</label>
-				<input
-					type="number"
-					id="quarter"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="quarterResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="dime">X $0.10 =</label>
-				<input
-					type="number"
-					id="dime"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="dimeResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="nickel">X $0.05 =</label>
-				<input
-					type="number"
-					id="nickel"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="nickelResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group">
-				<label for="coinRolls">Coin rolls =</label>
-				<input
-					type="number"
-					id="coinRolls"
-					min="0"
-					value=""
-					placeholder="0"
-					oninput="calculate()"
-					inputmode="decimal"
-				/>
-				<span class="arrow">⬆</span>
-				<span id="coinRollsResult" class="result">$0.00</span>
-			</div>
-
-			<div class="form-group total">
-				<label>Total Float =</label>
-				<span id="totalFloat" class="result">$0.00</span>
-			</div>
-
-			<!-- Clear All Button -->
-			<div class="clear-btn-container">
-				<button class="clear-btn" onclick="clearAll()">Clear All</button>
-			</div>
-		</div>
-
-		<script>
-			function calculate() {
-				// Get quantities
-				const twenty = parseFloat(document.getElementById('twenty').value) || 0;
-				const ten = parseFloat(document.getElementById('ten').value) || 0;
-				const five = parseFloat(document.getElementById('five').value) || 0;
-				const two = parseFloat(document.getElementById('two').value) || 0;
-				const one = parseFloat(document.getElementById('one').value) || 0;
-				const quarter =
-					parseFloat(document.getElementById('quarter').value) || 0;
-				const dime = parseFloat(document.getElementById('dime').value) || 0;
-				const nickel = parseFloat(document.getElementById('nickel').value) || 0;
-				const coinRolls =
-					parseFloat(document.getElementById('coinRolls').value) || 0;
-
-				// Calculate amounts
-				const twentyAmount = twenty * 20;
-				const tenAmount = ten * 10;
-				const fiveAmount = five * 5;
-				const twoAmount = two * 2;
-				const oneAmount = one * 1;
-				const quarterAmount = quarter * 0.25;
-				const dimeAmount = dime * 0.1;
-				const nickelAmount = nickel * 0.05;
-
-				// Coin rolls are not multiplied - displayed as entered
-				const coinRollsAmount = coinRolls;
-
-				// Update display
-				document.getElementById('twentyResult').textContent =
-					'$' + twentyAmount.toFixed(2);
-				document.getElementById('tenResult').textContent =
-					'$' + tenAmount.toFixed(2);
-				document.getElementById('fiveResult').textContent =
-					'$' + fiveAmount.toFixed(2);
-				document.getElementById('twoResult').textContent =
-					'$' + twoAmount.toFixed(2);
-				document.getElementById('oneResult').textContent =
-					'$' + oneAmount.toFixed(2);
-				document.getElementById('quarterResult').textContent =
-					'$' + quarterAmount.toFixed(2);
-				document.getElementById('dimeResult').textContent =
-					'$' + dimeAmount.toFixed(2);
-				document.getElementById('nickelResult').textContent =
-					'$' + nickelAmount.toFixed(2);
-				document.getElementById('coinRollsResult').textContent =
-					'$' + coinRollsAmount.toFixed(2);
-
-				// Calculate total
-				const total =
-					twentyAmount +
-					tenAmount +
-					fiveAmount +
-					twoAmount +
-					oneAmount +
-					quarterAmount +
-					dimeAmount +
-					nickelAmount +
-					coinRollsAmount;
-
-				document.getElementById('totalFloat').textContent =
-					'$' + total.toFixed(2);
-			}
-
-			function clearAll() {
-				// Clear all input fields
-				const inputs = document.querySelectorAll('input[type="number"]');
-				inputs.forEach((input) => {
-					input.value = '';
-					input.placeholder = '0';
-				});
-
-				// Reset date to today
-				const today = new Date();
-				const dateString = today.toISOString().split('T')[0];
-				document.getElementById('date').value = dateString;
-
-				// Reset all results to $0.00
-				const results = document.querySelectorAll('.result');
-				results.forEach((result) => {
-					result.textContent = '$0.00';
-				});
-
-				// Focus first input field
-				document.getElementById('twenty').focus();
-			}
-
-			// Set today's date as default
-			document.addEventListener('DOMContentLoaded', function () {
-				const today = new Date();
-				const dateString = today.toISOString().split('T')[0];
-				document.getElementById('date').value = dateString;
-
-				// Add event listeners to clear default zero on focus
-				const inputs = document.querySelectorAll('input[type="number"]');
-				inputs.forEach((input) => {
-					input.addEventListener('focus', function () {
-						if (this.value === '0') {
-							this.value = '';
-						}
-					});
-					input.addEventListener('blur', function () {
-						if (this.value === '') {
-							this.value = '0';
-							calculate();
-						}
-					});
-				});
-
-				// Focus first input field on load for easier mobile entry
-				document.getElementById('twenty').focus();
-			});
-		</script>
-	</body>
+    <script>
+        function calculate() {
+            // Get quantities
+            const twenty = parseFloat(document.getElementById('twenty').value) || 0;
+            const ten = parseFloat(document.getElementById('ten').value) || 0;
+            const five = parseFloat(document.getElementById('five').value) || 0;
+            const two = parseFloat(document.getElementById('two').value) || 0;
+            const one = parseFloat(document.getElementById('one').value) || 0;
+            const quarter = parseFloat(document.getElementById('quarter').value) || 0;
+            const dime = parseFloat(document.getElementById('dime').value) || 0;
+            const nickel = parseFloat(document.getElementById('nickel').value) || 0;
+            const coinRolls = parseFloat(document.getElementById('coinRolls').value) || 0;
+            
+            // Calculate amounts
+            const twentyAmount = twenty * 20;
+            const tenAmount = ten * 10;
+            const fiveAmount = five * 5;
+            const twoAmount = two * 2;
+            const oneAmount = one * 1;
+            const quarterAmount = quarter * 0.25;
+            const dimeAmount = dime * 0.10;
+            const nickelAmount = nickel * 0.05;
+            
+            // Coin rolls are not multiplied - displayed as entered
+            const coinRollsAmount = coinRolls;
+            
+            // Update display
+            document.getElementById('twentyResult').textContent = '$' + twentyAmount.toFixed(2);
+            document.getElementById('tenResult').textContent = '$' + tenAmount.toFixed(2);
+            document.getElementById('fiveResult').textContent = '$' + fiveAmount.toFixed(2);
+            document.getElementById('twoResult').textContent = '$' + twoAmount.toFixed(2);
+            document.getElementById('oneResult').textContent = '$' + oneAmount.toFixed(2);
+            document.getElementById('quarterResult').textContent = '$' + quarterAmount.toFixed(2);
+            document.getElementById('dimeResult').textContent = '$' + dimeAmount.toFixed(2);
+            document.getElementById('nickelResult').textContent = '$' + nickelAmount.toFixed(2);
+            document.getElementById('coinRollsResult').textContent = '$' + coinRollsAmount.toFixed(2);
+            
+            // Calculate total
+            const total = twentyAmount + tenAmount + fiveAmount + twoAmount + oneAmount + 
+                          quarterAmount + dimeAmount + nickelAmount + coinRollsAmount;
+            
+            document.getElementById('totalFloat').textContent = '$' + total.toFixed(2);
+        }
+        
+        // Set today's date as default
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            document.getElementById('date').value = dateString;
+            
+            // Add event listeners to clear default zero on focus
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    if (this.value === "0") {
+                        this.value = '';
+                    }
+                });
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.value = '0';
+                        calculate();
+                    }
+                });
+            });
+            
+            // Focus first input field on load for easier mobile entry
+            document.getElementById('twenty').focus();
+        });
+    </script>
+</body>
 </html>
