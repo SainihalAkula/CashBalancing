@@ -23,7 +23,7 @@
             padding: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             max-width: 500px;
-            margin: 0 auto;
+            margin: 0 auto 20px;
         }
         h1 {
             text-align: center;
@@ -87,6 +87,86 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .clear-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .clear-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        /* Cash Balancing Table Styles */
+        .cash-balancing {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .cash-balancing h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+        .balancing-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .balancing-label {
+            width: 70%;
+            font-weight: bold;
+        }
+        .balancing-operator {
+            width: 10%;
+            text-align: center;
+        }
+        .balancing-input {
+            width: 20%;
+        }
+        .balancing-input input {
+            width: 100%;
+            min-width: auto;
+            margin-right: 0;
+        }
+        .balancing-total {
+            font-weight: bold;
+            border-top: 2px solid #333;
+            padding-top: 10px;
+        }
+        #differenceDisplay {
+            font-weight: bold;
+            text-align: right;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .over {
+            color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+        .short {
+            color: #f44336;
+            background-color: #ffebee;
+        }
+        .exact {
+            color: #2196F3;
+            background-color: #e3f2fd;
+        }
         
         @media (max-width: 400px) {
             label {
@@ -103,6 +183,12 @@
             }
             #date {
                 width: 100%;
+            }
+            .balancing-label {
+                width: 60%;
+            }
+            .balancing-input {
+                width: 30%;
             }
         }
     </style>
@@ -175,6 +261,87 @@
             <label>Total Float =</label>
             <span id="totalFloat" class="result">$0.00</span>
         </div>
+        
+        <button class="clear-btn" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <!-- Cash Balancing Table -->
+    <div class="cash-balancing">
+        <h2>Cash Balancing</h2>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">Safe Drops</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="safeDrops" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">CPO</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="cpo1" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">CPO</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="cpo2" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">CPO</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="cpo3" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">Drive aways</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="driveAways" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">Pump Tests</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="pumpTests" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">US $</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="usDollars" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">Shift End Float</div>
+            <div class="balancing-operator">+</div>
+            <div class="balancing-input"><input type="number" id="shiftEndFloat" min="0" value="0" readonly></div>
+        </div>
+        
+        <div class="balancing-row balancing-total">
+            <div class="balancing-label">Subtotal Revenue</div>
+            <div class="balancing-operator">=</div>
+            <div class="balancing-input"><input type="number" id="subtotalRevenue" value="0" readonly></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">Shift Start Float</div>
+            <div class="balancing-operator">-</div>
+            <div class="balancing-input"><input type="number" id="shiftStartFloat" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div class="balancing-row balancing-total">
+            <div class="balancing-label">Total Revenue</div>
+            <div class="balancing-operator">=</div>
+            <div class="balancing-input"><input type="number" id="totalRevenue" value="0" readonly></div>
+        </div>
+        
+        <div class="balancing-row">
+            <div class="balancing-label">Shift Sales in Bulloch</div>
+            <div class="balancing-operator">-</div>
+            <div class="balancing-input"><input type="number" id="shiftSales" min="0" value="0" onchange="calculateBalancing()"></div>
+        </div>
+        
+        <div id="differenceDisplay" class="exact">Perfectly balanced!</div>
     </div>
 
     <script>
@@ -219,6 +386,95 @@
                           quarterAmount + dimeAmount + nickelAmount + coinRollsAmount;
             
             document.getElementById('totalFloat').textContent = '$' + total.toFixed(2);
+            
+            // Automatically update Shift End Float to match Total Float
+            document.getElementById('shiftEndFloat').value = total.toFixed(2);
+            
+            // Recalculate balancing
+            calculateBalancing();
+        }
+        
+        function calculateBalancing() {
+            // Get all input values
+            const safeDrops = parseFloat(document.getElementById('safeDrops').value) || 0;
+            const cpo1 = parseFloat(document.getElementById('cpo1').value) || 0;
+            const cpo2 = parseFloat(document.getElementById('cpo2').value) || 0;
+            const cpo3 = parseFloat(document.getElementById('cpo3').value) || 0;
+            const driveAways = parseFloat(document.getElementById('driveAways').value) || 0;
+            const pumpTests = parseFloat(document.getElementById('pumpTests').value) || 0;
+            const usDollars = parseFloat(document.getElementById('usDollars').value) || 0;
+            const shiftEndFloat = parseFloat(document.getElementById('shiftEndFloat').value) || 0;
+            const shiftStartFloat = parseFloat(document.getElementById('shiftStartFloat').value) || 0;
+            const shiftSales = parseFloat(document.getElementById('shiftSales').value) || 0;
+            
+            // Calculate subtotal revenue
+            const subtotalRevenue = safeDrops + cpo1 + cpo2 + cpo3 + driveAways + pumpTests + usDollars + shiftEndFloat;
+            document.getElementById('subtotalRevenue').value = subtotalRevenue.toFixed(2);
+            
+            // Calculate total revenue
+            const totalRevenue = subtotalRevenue - shiftStartFloat;
+            document.getElementById('totalRevenue').value = totalRevenue.toFixed(2);
+            
+            // Calculate difference and display message
+            const difference = totalRevenue - shiftSales;
+            const differenceDisplay = document.getElementById('differenceDisplay');
+            
+            if (difference > 0) {
+                differenceDisplay.textContent = `You are $${difference.toFixed(2)} over`;
+                differenceDisplay.className = 'over';
+            } else if (difference < 0) {
+                differenceDisplay.textContent = `You are $${Math.abs(difference).toFixed(2)} short`;
+                differenceDisplay.className = 'short';
+            } else {
+                differenceDisplay.textContent = 'Perfectly balanced!';
+                differenceDisplay.className = 'exact';
+            }
+        }
+        
+        function clearAll() {
+            // Reset all cash tray input fields to 0
+            document.getElementById('twenty').value = '0';
+            document.getElementById('ten').value = '0';
+            document.getElementById('five').value = '0';
+            document.getElementById('two').value = '0';
+            document.getElementById('one').value = '0';
+            document.getElementById('quarter').value = '0';
+            document.getElementById('dime').value = '0';
+            document.getElementById('nickel').value = '0';
+            document.getElementById('coinRolls').value = '0';
+            
+            // Reset all cash tray results to $0.00
+            document.getElementById('twentyResult').textContent = '$0.00';
+            document.getElementById('tenResult').textContent = '$0.00';
+            document.getElementById('fiveResult').textContent = '$0.00';
+            document.getElementById('twoResult').textContent = '$0.00';
+            document.getElementById('oneResult').textContent = '$0.00';
+            document.getElementById('quarterResult').textContent = '$0.00';
+            document.getElementById('dimeResult').textContent = '$0.00';
+            document.getElementById('nickelResult').textContent = '$0.00';
+            document.getElementById('coinRollsResult').textContent = '$0.00';
+            document.getElementById('totalFloat').textContent = '$0.00';
+            
+            // Reset all cash balancing inputs to 0
+            document.getElementById('safeDrops').value = '0';
+            document.getElementById('cpo1').value = '0';
+            document.getElementById('cpo2').value = '0';
+            document.getElementById('cpo3').value = '0';
+            document.getElementById('driveAways').value = '0';
+            document.getElementById('pumpTests').value = '0';
+            document.getElementById('usDollars').value = '0';
+            document.getElementById('shiftEndFloat').value = '0';
+            document.getElementById('shiftStartFloat').value = '0';
+            document.getElementById('shiftSales').value = '0';
+            document.getElementById('subtotalRevenue').value = '0';
+            document.getElementById('totalRevenue').value = '0';
+            
+            // Reset difference display
+            document.getElementById('differenceDisplay').textContent = 'Perfectly balanced!';
+            document.getElementById('differenceDisplay').className = 'exact';
+            
+            // Set focus back to the first input field
+            document.getElementById('twenty').focus();
         }
         
         // Set today's date as default
@@ -238,7 +494,13 @@
                 input.addEventListener('blur', function() {
                     if (this.value === '') {
                         this.value = '0';
-                        calculate();
+                        if (this.id === 'twenty' || this.id === 'ten' || this.id === 'five' || 
+                            this.id === 'two' || this.id === 'one' || this.id === 'quarter' || 
+                            this.id === 'dime' || this.id === 'nickel' || this.id === 'coinRolls') {
+                            calculate();
+                        } else {
+                            calculateBalancing();
+                        }
                     }
                 });
             });
