@@ -437,15 +437,18 @@
             const difference = totalRevenue - shiftSales;
             const differenceDisplay = document.getElementById('differenceDisplay');
             
-            if (difference > 0) {
-                differenceDisplay.textContent = `You are $${difference.toFixed(2)} over`;
-                differenceDisplay.className = 'over';
-            } else if (difference < 0) {
-                differenceDisplay.textContent = `You are $${Math.abs(difference).toFixed(2)} short`;
-                differenceDisplay.className = 'short';
-            } else {
+            // Round to 2 decimal places to avoid floating point precision issues
+            const roundedDifference = Math.round(difference * 100) / 100;
+            
+            if (roundedDifference === 0) {
                 differenceDisplay.textContent = 'Perfectly balanced!';
                 differenceDisplay.className = 'exact';
+            } else if (roundedDifference > 0) {
+                differenceDisplay.textContent = `You are $${Math.abs(roundedDifference).toFixed(2)} over`;
+                differenceDisplay.className = 'over';
+            } else {
+                differenceDisplay.textContent = `You are $${Math.abs(roundedDifference).toFixed(2)} short`;
+                differenceDisplay.className = 'short';
             }
         }
         
