@@ -24,6 +24,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             max-width: 500px;
             margin: 0 auto 20px;
+            width: 100%;
         }
         h1 {
             text-align: center;
@@ -48,7 +49,7 @@
         input {
             width: 20%;
             min-width: 80px;
-            padding: 10px;
+            padding: 8px 10px;
             margin-right: 10px;
             border: 1px solid #ddd;
             border-radius: 3px;
@@ -112,6 +113,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             max-width: 500px;
             margin: 0 auto;
+            width: 100%;
         }
         .cash-balancing h2 {
             text-align: center;
@@ -124,6 +126,7 @@
             margin-bottom: 10px;
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
         }
         .balancing-label {
             width: 70%;
@@ -138,7 +141,7 @@
         }
         .balancing-input input {
             width: 100%;
-            min-width: 100px;
+            min-width: 90px;
             padding-right: 15px;
             margin-right: 0;
         }
@@ -179,16 +182,19 @@
         }
         
         @media (max-width: 400px) {
+            .cash-tray, .cash-balancing {
+                padding: 12px;
+            }
             label {
                 width: 100%;
                 margin-bottom: 5px;
             }
             input {
-                width: 30%;
+                width: 40%;
                 margin-right: 5%;
             }
             .result {
-                width: 60%;
+                width: 50%;
                 text-align: right;
             }
             #date {
@@ -198,7 +204,7 @@
                 width: 60%;
             }
             .balancing-input {
-                width: 30%;
+                width: 35%;
             }
             .balancing-input input {
                 width: 100%;
@@ -372,8 +378,53 @@
     </div>
 
     <script>
+        // Set today's date as default
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            
+            // Add event listeners to all input fields to select their contents when focused
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                // Clear zero value on focus
+                input.addEventListener('focus', function() {
+                    if (this.value === '0') {
+                        this.value = '';
+                    }
+                    this.select();
+                });
+                
+                // Restore zero if left empty
+                input.addEventListener('blur', function() {
+                    if (this.value === '' && this.id !== 'date') {
+                        this.value = '0';
+                        if (this.id !== 'shiftEndFloat' && 
+                            this.id !== 'subtotalRevenue' && 
+                            this.id !== 'totalRevenue') {
+                            calculate();
+                            calculateBalancing();
+                        }
+                    }
+                });
+                
+                // Calculate on input change (for better responsiveness)
+                input.addEventListener('input', function() {
+                    if (this.id !== 'shiftEndFloat' && 
+                        this.id !== 'subtotalRevenue' && 
+                        this.id !== 'totalRevenue') {
+                        calculate();
+                        calculateBalancing();
+                    }
+                });
+            });
+            
+            // Initial calculations
+            calculate();
+            calculateBalancing();
+        });
+
         function calculate() {
-            // Get quantities
+            // Get values from input fields
             const hundred = parseFloat(document.getElementById('hundred').value) || 0;
             const fifty = parseFloat(document.getElementById('fifty').value) || 0;
             const twenty = parseFloat(document.getElementById('twenty').value) || 0;
@@ -385,50 +436,48 @@
             const dime = parseFloat(document.getElementById('dime').value) || 0;
             const nickel = parseFloat(document.getElementById('nickel').value) || 0;
             const coinRolls = parseFloat(document.getElementById('coinRolls').value) || 0;
-            
-            // Calculate amounts
-            const hundredAmount = hundred * 100;
-            const fiftyAmount = fifty * 50;
-            const twentyAmount = twenty * 20;
-            const tenAmount = ten * 10;
-            const fiveAmount = five * 5;
-            const twoAmount = two * 2;
-            const oneAmount = one * 1;
-            const quarterAmount = quarter * 0.25;
-            const dimeAmount = dime * 0.10;
-            const nickelAmount = nickel * 0.05;
-            
-            // Coin rolls are not multiplied - displayed as entered
-            const coinRollsAmount = coinRolls;
-            
-            // Update display
-            document.getElementById('hundredResult').textContent = '$' + hundredAmount.toFixed(2);
-            document.getElementById('fiftyResult').textContent = '$' + fiftyAmount.toFixed(2);
-            document.getElementById('twentyResult').textContent = '$' + twentyAmount.toFixed(2);
-            document.getElementById('tenResult').textContent = '$' + tenAmount.toFixed(2);
-            document.getElementById('fiveResult').textContent = '$' + fiveAmount.toFixed(2);
-            document.getElementById('twoResult').textContent = '$' + twoAmount.toFixed(2);
-            document.getElementById('oneResult').textContent = '$' + oneAmount.toFixed(2);
-            document.getElementById('quarterResult').textContent = '$' + quarterAmount.toFixed(2);
-            document.getElementById('dimeResult').textContent = '$' + dimeAmount.toFixed(2);
-            document.getElementById('nickelResult').textContent = '$' + nickelAmount.toFixed(2);
-            document.getElementById('coinRollsResult').textContent = '$' + coinRollsAmount.toFixed(2);
-            
+
+            // Calculate each denomination
+            const hundredResult = hundred * 100;
+            const fiftyResult = fifty * 50;
+            const twentyResult = twenty * 20;
+            const tenResult = ten * 10;
+            const fiveResult = five * 5;
+            const twoResult = two * 2;
+            const oneResult = one * 1;
+            const quarterResult = quarter * 0.25;
+            const dimeResult = dime * 0.10;
+            const nickelResult = nickel * 0.05;
+            const coinRollsResult = coinRolls;
+
+            // Display each result
+            document.getElementById('hundredResult').textContent = '$' + hundredResult.toFixed(2);
+            document.getElementById('fiftyResult').textContent = '$' + fiftyResult.toFixed(2);
+            document.getElementById('twentyResult').textContent = '$' + twentyResult.toFixed(2);
+            document.getElementById('tenResult').textContent = '$' + tenResult.toFixed(2);
+            document.getElementById('fiveResult').textContent = '$' + fiveResult.toFixed(2);
+            document.getElementById('twoResult').textContent = '$' + twoResult.toFixed(2);
+            document.getElementById('oneResult').textContent = '$' + oneResult.toFixed(2);
+            document.getElementById('quarterResult').textContent = '$' + quarterResult.toFixed(2);
+            document.getElementById('dimeResult').textContent = '$' + dimeResult.toFixed(2);
+            document.getElementById('nickelResult').textContent = '$' + nickelResult.toFixed(2);
+            document.getElementById('coinRollsResult').textContent = '$' + coinRollsResult.toFixed(2);
+
             // Calculate total
-            const total = hundredAmount + fiftyAmount + twentyAmount + tenAmount + fiveAmount + 
-                          twoAmount + oneAmount + quarterAmount + dimeAmount + nickelAmount + coinRollsAmount;
-            
+            const total = hundredResult + fiftyResult + twentyResult + tenResult + 
+                          fiveResult + twoResult + oneResult + quarterResult + 
+                          dimeResult + nickelResult + coinRollsResult;
+
+            // Display total
             document.getElementById('totalFloat').textContent = '$' + total.toFixed(2);
             
-            // Automatically update Shift End Float to match Total Float
+            // Update shift end float in balancing section
             document.getElementById('shiftEndFloat').value = total.toFixed(2);
-            
-            // Recalculate balancing
             calculateBalancing();
         }
-        
+
         function calculateBalancing() {
-            // Get all input values
+            // Get values from input fields
             const safeDrops = parseFloat(document.getElementById('safeDrops').value) || 0;
             const cpo1 = parseFloat(document.getElementById('cpo1').value) || 0;
             const cpo2 = parseFloat(document.getElementById('cpo2').value) || 0;
@@ -439,120 +488,56 @@
             const shiftEndFloat = parseFloat(document.getElementById('shiftEndFloat').value) || 0;
             const shiftStartFloat = parseFloat(document.getElementById('shiftStartFloat').value) || 0;
             const shiftSales = parseFloat(document.getElementById('shiftSales').value) || 0;
-            
+
             // Calculate subtotal revenue
-            const subtotalRevenue = safeDrops + cpo1 + cpo2 + cpo3 + driveAways + pumpTests + usDollars + shiftEndFloat;
+            const subtotalRevenue = safeDrops + cpo1 + cpo2 + cpo3 + driveAways + 
+                                  pumpTests + usDollars + shiftEndFloat;
             document.getElementById('subtotalRevenue').value = subtotalRevenue.toFixed(2);
-            
+
             // Calculate total revenue
             const totalRevenue = subtotalRevenue - shiftStartFloat;
             document.getElementById('totalRevenue').value = totalRevenue.toFixed(2);
-            
-            // Calculate difference and display message
+
+            // Calculate difference
             const difference = totalRevenue - shiftSales;
             const differenceDisplay = document.getElementById('differenceDisplay');
             
-            // Round to 2 decimal places to avoid floating point precision issues
-            const roundedDifference = Math.round(difference * 100) / 100;
-            
-            if (roundedDifference === 0) {
+            // Update difference display
+            if (difference > 0) {
+                differenceDisplay.textContent = 'Over by: $' + Math.abs(difference).toFixed(2);
+                differenceDisplay.className = 'over';
+            } else if (difference < 0) {
+                differenceDisplay.textContent = 'Short by: $' + Math.abs(difference).toFixed(2);
+                differenceDisplay.className = 'short';
+            } else {
                 differenceDisplay.textContent = 'Perfectly balanced!';
                 differenceDisplay.className = 'exact';
-            } else if (roundedDifference > 0) {
-                differenceDisplay.textContent = `You are $${Math.abs(roundedDifference).toFixed(2)} over`;
-                differenceDisplay.className = 'over';
-            } else {
-                differenceDisplay.textContent = `You are $${Math.abs(roundedDifference).toFixed(2)} short`;
-                differenceDisplay.className = 'short';
             }
         }
-        
+
         function clearAll() {
-            // Reset all cash tray input fields to 0
-            document.getElementById('hundred').value = '0';
-            document.getElementById('fifty').value = '0';
-            document.getElementById('twenty').value = '0';
-            document.getElementById('ten').value = '0';
-            document.getElementById('five').value = '0';
-            document.getElementById('two').value = '0';
-            document.getElementById('one').value = '0';
-            document.getElementById('quarter').value = '0';
-            document.getElementById('dime').value = '0';
-            document.getElementById('nickel').value = '0';
-            document.getElementById('coinRolls').value = '0';
-            
-            // Reset all cash tray results to $0.00
-            document.getElementById('hundredResult').textContent = '$0.00';
-            document.getElementById('fiftyResult').textContent = '$0.00';
-            document.getElementById('twentyResult').textContent = '$0.00';
-            document.getElementById('tenResult').textContent = '$0.00';
-            document.getElementById('fiveResult').textContent = '$0.00';
-            document.getElementById('twoResult').textContent = '$0.00';
-            document.getElementById('oneResult').textContent = '$0.00';
-            document.getElementById('quarterResult').textContent = '$0.00';
-            document.getElementById('dimeResult').textContent = '$0.00';
-            document.getElementById('nickelResult').textContent = '$0.00';
-            document.getElementById('coinRollsResult').textContent = '$0.00';
-            document.getElementById('totalFloat').textContent = '$0.00';
-            
-            // Reset all cash balancing inputs to 0
-            document.getElementById('safeDrops').value = '0';
-            document.getElementById('cpo1').value = '0';
-            document.getElementById('cpo2').value = '0';
-            document.getElementById('cpo3').value = '0';
-            document.getElementById('driveAways').value = '0';
-            document.getElementById('pumpTests').value = '0';
-            document.getElementById('usDollars').value = '0';
-            document.getElementById('shiftEndFloat').value = '0';
-            document.getElementById('shiftStartFloat').value = '0';
-            document.getElementById('shiftSales').value = '0';
-            document.getElementById('subtotalRevenue').value = '0';
-            document.getElementById('totalRevenue').value = '0';
-            
+            // Clear all input fields
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                if (input.id !== 'date' && input.id !== 'shiftEndFloat' && 
+                    input.id !== 'subtotalRevenue' && input.id !== 'totalRevenue') {
+                    input.value = '0';
+                }
+            });
+
+            // Reset all result displays
+            const results = document.querySelectorAll('.result');
+            results.forEach(result => {
+                result.textContent = '$0.00';
+            });
+
             // Reset difference display
             document.getElementById('differenceDisplay').textContent = 'Perfectly balanced!';
             document.getElementById('differenceDisplay').className = 'exact';
-            
-            // Set focus back to the first input field
-            document.getElementById('hundred').focus();
-        }
-        
-        // Set today's date as default
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const dateString = today.toISOString().split('T')[0];
-            document.getElementById('date').value = dateString;
-            
-            // Add event listeners to clear default zero on focus
-            const inputs = document.querySelectorAll('input[type="number"]');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    if (this.value === "0") {
-                        this.value = '';
-                    }
-                });
-                input.addEventListener('blur', function() {
-                    if (this.value === '') {
-                        this.value = '0';
-                        if (this.id === 'hundred' || this.id === 'fifty' || this.id === 'twenty' || 
-                            this.id === 'ten' || this.id === 'five' || this.id === 'two' || 
-                            this.id === 'one' || this.id === 'quarter' || this.id === 'dime' || 
-                            this.id === 'nickel' || this.id === 'coinRolls') {
-                            calculate();
-                        } else {
-                            calculateBalancing();
-                        }
-                    }
-                });
-            });
-            
-            // Focus first input field on load for easier mobile entry
-            document.getElementById('hundred').focus();
-            
-            // Initialize calculations
+
+            // Recalculate
             calculate();
-            calculateBalancing();
-        });
+        }
     </script>
 </body>
 </html>
