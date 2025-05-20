@@ -204,6 +204,18 @@
         </div>
         
         <div class="form-group">
+            <label for="hundred">X $100 =</label>
+            <input type="number" id="hundred" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="hundredResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="fifty">X $50 =</label>
+            <input type="number" id="fifty" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <span id="fiftyResult" class="result">$0.00</span>
+        </div>
+        
+        <div class="form-group">
             <label for="twenty">X $20 =</label>
             <input type="number" id="twenty" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="twentyResult" class="result">$0.00</span>
@@ -347,6 +359,8 @@
     <script>
         function calculate() {
             // Get quantities
+            const hundred = parseFloat(document.getElementById('hundred').value) || 0;
+            const fifty = parseFloat(document.getElementById('fifty').value) || 0;
             const twenty = parseFloat(document.getElementById('twenty').value) || 0;
             const ten = parseFloat(document.getElementById('ten').value) || 0;
             const five = parseFloat(document.getElementById('five').value) || 0;
@@ -358,6 +372,8 @@
             const coinRolls = parseFloat(document.getElementById('coinRolls').value) || 0;
             
             // Calculate amounts
+            const hundredAmount = hundred * 100;
+            const fiftyAmount = fifty * 50;
             const twentyAmount = twenty * 20;
             const tenAmount = ten * 10;
             const fiveAmount = five * 5;
@@ -371,6 +387,8 @@
             const coinRollsAmount = coinRolls;
             
             // Update display
+            document.getElementById('hundredResult').textContent = '$' + hundredAmount.toFixed(2);
+            document.getElementById('fiftyResult').textContent = '$' + fiftyAmount.toFixed(2);
             document.getElementById('twentyResult').textContent = '$' + twentyAmount.toFixed(2);
             document.getElementById('tenResult').textContent = '$' + tenAmount.toFixed(2);
             document.getElementById('fiveResult').textContent = '$' + fiveAmount.toFixed(2);
@@ -382,8 +400,8 @@
             document.getElementById('coinRollsResult').textContent = '$' + coinRollsAmount.toFixed(2);
             
             // Calculate total
-            const total = twentyAmount + tenAmount + fiveAmount + twoAmount + oneAmount + 
-                          quarterAmount + dimeAmount + nickelAmount + coinRollsAmount;
+            const total = hundredAmount + fiftyAmount + twentyAmount + tenAmount + fiveAmount + 
+                          twoAmount + oneAmount + quarterAmount + dimeAmount + nickelAmount + coinRollsAmount;
             
             document.getElementById('totalFloat').textContent = '$' + total.toFixed(2);
             
@@ -433,6 +451,8 @@
         
         function clearAll() {
             // Reset all cash tray input fields to 0
+            document.getElementById('hundred').value = '0';
+            document.getElementById('fifty').value = '0';
             document.getElementById('twenty').value = '0';
             document.getElementById('ten').value = '0';
             document.getElementById('five').value = '0';
@@ -444,6 +464,8 @@
             document.getElementById('coinRolls').value = '0';
             
             // Reset all cash tray results to $0.00
+            document.getElementById('hundredResult').textContent = '$0.00';
+            document.getElementById('fiftyResult').textContent = '$0.00';
             document.getElementById('twentyResult').textContent = '$0.00';
             document.getElementById('tenResult').textContent = '$0.00';
             document.getElementById('fiveResult').textContent = '$0.00';
@@ -474,7 +496,7 @@
             document.getElementById('differenceDisplay').className = 'exact';
             
             // Set focus back to the first input field
-            document.getElementById('twenty').focus();
+            document.getElementById('hundred').focus();
         }
         
         // Set today's date as default
@@ -494,9 +516,10 @@
                 input.addEventListener('blur', function() {
                     if (this.value === '') {
                         this.value = '0';
-                        if (this.id === 'twenty' || this.id === 'ten' || this.id === 'five' || 
-                            this.id === 'two' || this.id === 'one' || this.id === 'quarter' || 
-                            this.id === 'dime' || this.id === 'nickel' || this.id === 'coinRolls') {
+                        if (this.id === 'hundred' || this.id === 'fifty' || this.id === 'twenty' || 
+                            this.id === 'ten' || this.id === 'five' || this.id === 'two' || 
+                            this.id === 'one' || this.id === 'quarter' || this.id === 'dime' || 
+                            this.id === 'nickel' || this.id === 'coinRolls') {
                             calculate();
                         } else {
                             calculateBalancing();
@@ -506,7 +529,7 @@
             });
             
             // Focus first input field on load for easier mobile entry
-            document.getElementById('twenty').focus();
+            document.getElementById('hundred').focus();
         });
     </script>
 </body>
