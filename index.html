@@ -138,8 +138,18 @@
         }
         .balancing-input input {
             width: 100%;
-            min-width: auto;
+            min-width: 100px;
+            padding-right: 15px;
             margin-right: 0;
+        }
+        /* Hide number input arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
         .balancing-total {
             font-weight: bold;
@@ -190,6 +200,11 @@
             .balancing-input {
                 width: 30%;
             }
+            .balancing-input input {
+                width: 100%;
+                min-width: auto;
+                padding-right: 10px;
+            }
         }
     </style>
 </head>
@@ -205,67 +220,67 @@
         
         <div class="form-group">
             <label for="hundred">X $100 =</label>
-            <input type="number" id="hundred" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="hundred" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="hundredResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="fifty">X $50 =</label>
-            <input type="number" id="fifty" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="fifty" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="fiftyResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="twenty">X $20 =</label>
-            <input type="number" id="twenty" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="twenty" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="twentyResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="ten">X $10 =</label>
-            <input type="number" id="ten" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="ten" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="tenResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="five">X $5 =</label>
-            <input type="number" id="five" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="five" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="fiveResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="two">X $2 =</label>
-            <input type="number" id="two" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="two" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="twoResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="one">X $1 =</label>
-            <input type="number" id="one" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="one" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="oneResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="quarter">X $0.25 =</label>
-            <input type="number" id="quarter" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="quarter" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="quarterResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="dime">X $0.10 =</label>
-            <input type="number" id="dime" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="dime" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="dimeResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="nickel">X $0.05 =</label>
-            <input type="number" id="nickel" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="nickel" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="nickelResult" class="result">$0.00</span>
         </div>
         
         <div class="form-group">
             <label for="coinRolls">Coin rolls =</label>
-            <input type="number" id="coinRolls" min="0" value="" placeholder="0" onchange="calculate()" inputmode="decimal">
+            <input type="number" id="coinRolls" min="0" value="0" placeholder="0" onchange="calculate()" inputmode="decimal">
             <span id="coinRollsResult" class="result">$0.00</span>
         </div>
         
@@ -533,6 +548,10 @@
             
             // Focus first input field on load for easier mobile entry
             document.getElementById('hundred').focus();
+            
+            // Initialize calculations
+            calculate();
+            calculateBalancing();
         });
     </script>
 </body>
