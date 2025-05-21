@@ -477,43 +477,43 @@
         }
 
         function calculateBalancing() {
-            // Get values from input fields
-            const safeDrops = parseFloat(document.getElementById('safeDrops').value) || 0;
-            const cpo1 = parseFloat(document.getElementById('cpo1').value) || 0;
-            const cpo2 = parseFloat(document.getElementById('cpo2').value) || 0;
-            const cpo3 = parseFloat(document.getElementById('cpo3').value) || 0;
-            const driveAways = parseFloat(document.getElementById('driveAways').value) || 0;
-            const pumpTests = parseFloat(document.getElementById('pumpTests').value) || 0;
-            const usDollars = parseFloat(document.getElementById('usDollars').value) || 0;
-            const shiftEndFloat = parseFloat(document.getElementById('shiftEndFloat').value) || 0;
-            const shiftStartFloat = parseFloat(document.getElementById('shiftStartFloat').value) || 0;
-            const shiftSales = parseFloat(document.getElementById('shiftSales').value) || 0;
+        // Get values from input fields
+        const safeDrops = parseFloat(document.getElementById('safeDrops').value) || 0;
+        const cpo1 = parseFloat(document.getElementById('cpo1').value) || 0;
+        const cpo2 = parseFloat(document.getElementById('cpo2').value) || 0;
+        const cpo3 = parseFloat(document.getElementById('cpo3').value) || 0;
+        const driveAways = parseFloat(document.getElementById('driveAways').value) || 0;
+        const pumpTests = parseFloat(document.getElementById('pumpTests').value) || 0;
+        const usDollars = parseFloat(document.getElementById('usDollars').value) || 0;
+        const shiftEndFloat = parseFloat(document.getElementById('shiftEndFloat').value) || 0;
+        const shiftStartFloat = parseFloat(document.getElementById('shiftStartFloat').value) || 0;
+        const shiftSales = parseFloat(document.getElementById('shiftSales').value) || 0;
 
-            // Calculate subtotal revenue
-            const subtotalRevenue = safeDrops + cpo1 + cpo2 + cpo3 + driveAways + 
-                                  pumpTests + usDollars + shiftEndFloat;
-            document.getElementById('subtotalRevenue').value = subtotalRevenue.toFixed(2);
+        // Calculate subtotal revenue
+        const subtotalRevenue = safeDrops + cpo1 + cpo2 + cpo3 + driveAways + 
+                              pumpTests + usDollars + shiftEndFloat;
+        document.getElementById('subtotalRevenue').value = subtotalRevenue.toFixed(2);
 
-            // Calculate total revenue
-            const totalRevenue = subtotalRevenue - shiftStartFloat;
-            document.getElementById('totalRevenue').value = totalRevenue.toFixed(2);
+        // Calculate total revenue
+        const totalRevenue = subtotalRevenue - shiftStartFloat;
+        document.getElementById('totalRevenue').value = totalRevenue.toFixed(2);
 
-            // Calculate difference
-            const difference = totalRevenue - shiftSales;
-            const differenceDisplay = document.getElementById('differenceDisplay');
-            
-            // Update difference display
-            if (difference > 0) {
-                differenceDisplay.textContent = 'Over by: $' + Math.abs(difference).toFixed(2);
-                differenceDisplay.className = 'over';
-            } else if (difference < 0) {
-                differenceDisplay.textContent = 'Short by: $' + Math.abs(difference).toFixed(2);
-                differenceDisplay.className = 'short';
-            } else {
-                differenceDisplay.textContent = 'Perfectly balanced!';
-                differenceDisplay.className = 'exact';
-            }
+        // Calculate difference with rounding fix
+        const difference = Math.round((totalRevenue - shiftSales) * 100) / 100; // Key fix here
+        const differenceDisplay = document.getElementById('differenceDisplay');
+        
+        // Update difference display
+        if (difference > 0) {
+            differenceDisplay.textContent = 'Over by: $' + Math.abs(difference).toFixed(2);
+            differenceDisplay.className = 'over';
+        } else if (difference < 0) {
+            differenceDisplay.textContent = 'Short by: $' + Math.abs(difference).toFixed(2);
+            differenceDisplay.className = 'short';
+        } else {
+            differenceDisplay.textContent = 'Perfectly balanced!';
+            differenceDisplay.className = 'exact';
         }
+    }
 
         function clearAll() {
             // Clear all input fields
